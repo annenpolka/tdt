@@ -8,6 +8,6 @@ if (process.env.NODE_ENV === 'development') {
 const api = new TodoistApi(process.env.TODOIST_API_KEY || 'testing');
 
 // Get all tasks
-const tasks = await api.getTasks();
+const tasks = await api.getTasks({ limit: 10 });
 
 console.log('Tasks:', tasks);
