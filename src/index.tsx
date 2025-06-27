@@ -2,10 +2,12 @@
  * tdt - Todoist CLI tool
  */
 import React from 'react';
-import { render, Text } from 'ink';
+import { render, Text, Box } from 'ink';
 import { TodoistApi, Task } from '@doist/todoist-api-typescript';
 import * as dotenv from 'dotenv';
-import { TaskList } from './components/TaskList.js';
+import { SelectableTaskList } from './components/SelectableTaskList.js';
+import { TaskDetail } from './components/TaskDetail.js';
+import { TaskPreview } from './components/TaskPreview.js';
 
 if (process.env.NODE_ENV === 'development') {
   dotenv.config();
@@ -15,6 +17,8 @@ export const App: React.FC = () => {
   const [tasks, setTasks] = React.useState<Task[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = React.useState<Task | null>(null);
+  const [highlightedTask, setHighlightedTask] = React.useState<Task | null>(null);
 
   React.useEffect(() => {
     const fetchTasks = async () => {
@@ -22,6 +26,10 @@ export const App: React.FC = () => {
         const api = new TodoistApi(process.env.TODOIST_API_KEY || 'testing');
         const response = await api.getTasks({ limit: 10 });
         setTasks(response.results || []);
+        // 初期状態で最初のタスクをハイライト
+        if (response.results && response.results.length > 0) {
+          setHighlightedTask(response.results[0]);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'タスクの取得に失敗しました');
       } finally {
@@ -32,6 +40,18 @@ export const App: React.FC = () => {
     fetchTasks();
   }, []);
 
+  const handleTaskSelect = (task: Task) => {
+    setSelectedTask(task);
+  };
+
+  const handleTaskHighlight = (task: Task) => {
+    setHighlightedTask(task);
+  };
+
+  const handleBackToList = () => {
+    setSelectedTask(null);
+  };
+
   if (loading) {
     return <Text>読み込み中...</Text>;
   }
@@ -40,7 +60,24 @@ export const App: React.FC = () => {
     return <Text>エラー: {error}</Text>;
   }
 
-  return <TaskList tasks={tasks} />;
+  if (selectedTask) {
+    return <TaskDetail task={selectedTask} onBack={handleBackToList} />;
+  }
+
+  return (
+    <Box flexDirection="column" width="100%">
+      <Box marginBottom={1}>
+        <SelectableTaskList 
+          tasks={tasks} 
+          onSelect={handleTaskSelect}
+          onHighlight={handleTaskHighlight}
+        />
+      </Box>
+      <Box>
+        {highlightedTask && <TaskPreview task={highlightedTask} />}
+      </Box>
+    </Box>
+  );
 };
 
 async function main() {

@@ -69,8 +69,10 @@ describe('App', () => {
     await new Promise(resolve => setTimeout(resolve, 10));
     rerender(<App />);
     
-    expect(lastFrame()).toContain('📋 タスク一覧 (1件)');
-    expect(lastFrame()).toContain('1. テストタスク');
+    const output = lastFrame();
+    expect(output).toContain('📋 タスク一覧 (1件)');
+    expect(output).toContain('テストタスク [プロジェクト: project1]');
+    expect(output).toContain('📝 タスク詳細');
     expect(mockGetTasks).toHaveBeenCalledWith({ limit: 10 });
   });
 

@@ -41,6 +41,7 @@
     "@doist/todoist-api-typescript": "^5.0.2",
     "@types/react": "^19.1.8",
     "ink": "^6.0.1",
+    "ink-select-input": "^6.2.0",
     "react": "^19.1.0"
   },
   "pnpm": {
