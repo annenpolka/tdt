@@ -8,7 +8,7 @@ interface TaskPreviewProps {
 
 export const TaskPreview: React.FC<TaskPreviewProps> = ({ task }) => {
   return (
-    <Box flexDirection="column" padding={1} borderStyle="round" borderColor="cyan">
+    <Box flexDirection="column" padding={1} borderStyle="round" borderColor="cyan" width="100%">
       <Text color="cyan" bold>
         📝 タスク詳細
       </Text>

@@ -18,7 +18,7 @@ interface SelectItem {
 export const SelectableTaskList: React.FC<SelectableTaskListProps> = ({ tasks, onSelect, onHighlight }) => {
   if (tasks.length === 0) {
     return (
-      <Box flexDirection="column">
+      <Box flexDirection="column" borderStyle="round" borderColor="yellow" padding={1} width="100%">
         <Text color="yellow">タスクが見つかりません</Text>
       </Box>
     );
@@ -31,7 +31,7 @@ export const SelectableTaskList: React.FC<SelectableTaskListProps> = ({ tasks, o
   }));
 
   return (
-    <Box flexDirection="column" borderStyle="round" borderColor="blue" padding={1}>
+    <Box flexDirection="column" borderStyle="round" borderColor="blue" padding={1} width="100%">
       <Text color="blue" bold>
         📋 タスク一覧 ({tasks.length}件)
       </Text>
