@@ -29,7 +29,7 @@
 
 ## Domain Architecture
 - **Pattern**: Functional domain modeling
-- **Structure**: 
+- **Structure**:
   - `src/core/` - Pure domain models and business logic
   - `src/infra/` - Infrastructure and side effects
   - `src/app/` - Application layer
@@ -43,7 +43,7 @@
 - **Utilities**: cross-env for cross-platform environment variables
 
 ## Development Workflow
-- **Commands**: 
+- **Commands**:
   - `pnpm dev` - Development mode
   - `pnpm build` - Production build
   - `pnpm test` - Run tests
@@ -58,4 +58,4 @@
 
 ---
 
-*This project was bootstrapped from [ts-guide](https://github.com/mizchi/ts-guide) and ejected on 2024-12-27.*
+*This project was bootstrapped from [ts-guide](https://github.com/mizchi/ts-guide) and ejected on 2025-06-27.*
