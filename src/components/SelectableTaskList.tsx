@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Text } from 'ink';
 import SelectInput from 'ink-select-input';
 import type { Task } from '@doist/todoist-api-typescript';
+import { createTaskItemLabel } from './TaskItem.js';
 
 interface SelectableTaskListProps {
   tasks: Task[];
@@ -25,7 +26,7 @@ export const SelectableTaskList: React.FC<SelectableTaskListProps> = ({ tasks, o
   }
 
   const items: SelectItem[] = tasks.map((task) => ({
-    label: `${task.content}${task.projectId ? ` [プロジェクト: ${task.projectId}]` : ''}`,
+    label: createTaskItemLabel(task),
     value: task,
     key: task.id,
   }));
