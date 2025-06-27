@@ -33,26 +33,32 @@ describe('App', () => {
         id: '1',
         content: 'テストタスク',
         projectId: 'project1',
-        isCompleted: false,
-        order: 1,
+        checked: false,
+        childOrder: 1,
+        dayOrder: 1,
         priority: 1,
-        assigneeId: null,
-        assigner: null,
-        commentCount: 0,
-        createdAt: '2023-01-01T00:00:00Z',
-        creatorId: 'user1',
+        addedByUid: 'user1',
+        assignedByUid: null,
+        responsibleUid: null,
+        noteCount: 0,
+        addedAt: '2023-01-01T00:00:00Z',
+        completedAt: null,
+        updatedAt: '2023-01-01T00:00:00Z',
+        userId: 'user1',
+        isDeleted: false,
+        isCollapsed: false,
         description: '',
         due: null,
         duration: null,
+        deadline: null,
         labels: [],
         parentId: null,
         sectionId: null,
-        sync_id: null,
         url: 'https://todoist.com/task/1'
       }
     ];
 
-    const mockGetTasks = vi.fn().mockResolvedValue(mockTasks);
+    const mockGetTasks = vi.fn().mockResolvedValue({ results: mockTasks, nextCursor: null });
     MockedTodoistApi.mockImplementation(() => ({
       getTasks: mockGetTasks,
     }) as any);
