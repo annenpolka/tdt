@@ -1,0 +1,27 @@
+{
+  "name": "lazydoist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "dev": "cross-env NODE_ENV=development ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.4",
+  "devDependencies": {
+    "@types/node": "^24.0.4",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.6.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@doist/todoist-api-typescript": "^5.0.2"
+  }
+}
