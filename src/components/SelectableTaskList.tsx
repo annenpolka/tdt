@@ -10,7 +10,7 @@ import {
   toggleSortDirection,
   type TaskSortingState
 } from '../app/taskSorting.js';
-import { getSortDisplayName, type SortCriteria } from '../core/sorting.js';
+import { getSortDisplayName } from '../core/sorting.js';
 
 interface SelectableTaskListProps {
   tasks: Task[];

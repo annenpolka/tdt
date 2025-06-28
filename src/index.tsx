@@ -86,7 +86,9 @@ async function main() {
 
 // Only run main if not in test environment
 if (!import.meta.vitest) {
-  main().catch(console.error);
+  main().catch(() => {
+    process.exit(1);
+  });
 }
 
 export { };
