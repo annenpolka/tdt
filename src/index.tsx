@@ -1,10 +1,10 @@
 /**
  * tdt - Todoist CLI tool
  */
-import React from 'react';
-import { render, Text, Box } from 'ink';
-import { TodoistApi, Task } from '@doist/todoist-api-typescript';
+import { Task, TodoistApi } from '@doist/todoist-api-typescript';
 import * as dotenv from 'dotenv';
+import { Box, render, Text } from 'ink';
+import React from 'react';
 import { SelectableTaskList } from './components/SelectableTaskList.js';
 import { TaskDetail } from './components/TaskDetail.js';
 import { TaskPreview } from './components/TaskPreview.js';
@@ -24,7 +24,7 @@ export const App: React.FC = () => {
     const fetchTasks = async () => {
       try {
         const api = new TodoistApi(process.env.TODOIST_API_KEY || 'testing');
-        const response = await api.getTasks({ limit: 10 });
+        const response = await api.getTasks({ limit: 100 });
         setTasks(response.results || []);
         // 初期状態で最初のタスクをハイライト
         if (response.results && response.results.length > 0) {
@@ -67,8 +67,8 @@ export const App: React.FC = () => {
   return (
     <Box flexDirection="column" width="100%">
       <Box marginBottom={1}>
-        <SelectableTaskList 
-          tasks={tasks} 
+        <SelectableTaskList
+          tasks={tasks}
           onSelect={handleTaskSelect}
           onHighlight={handleTaskHighlight}
         />
@@ -89,7 +89,7 @@ if (!import.meta.vitest) {
   main().catch(console.error);
 }
 
-export {};
+export { };
 
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;

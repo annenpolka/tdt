@@ -58,7 +58,7 @@ export const SelectableTaskList: React.FC<SelectableTaskListProps> = ({ tasks, o
   }
 
   const items: SelectItem[] = sortedTasks.map((task) => ({
-    label: createTaskItemLabel(task),
+    label: createTaskItemLabel(task, sortingState.currentConfig),
     value: task,
     key: task.id,
   }));
