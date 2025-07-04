@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { sortTasks, getSortDisplayName, type SortConfig } from './sorting';
+import { sortTasks, getSortDisplayName, sortTasksWithCompletion, type SortConfig } from './sorting';
 import type { Task } from '@doist/todoist-api-typescript';
+import { createTaskCompletionState, toggleTaskCompletion, type TaskCompletionState } from './taskCompletion';
 
 describe('sorting', () => {
   const mockTasks: Task[] = [
@@ -204,6 +205,97 @@ describe('sorting', () => {
       expect(getSortDisplayName('dueDate', 'asc')).toBe('期限 (昇順)');
       expect(getSortDisplayName('alphabetical', 'desc')).toBe('アルファベット順 (降順)');
       expect(getSortDisplayName('project', 'asc')).toBe('プロジェクト (昇順)');
+    });
+  });
+
+  describe('sortTasksWithCompletion', () => {
+    it('should place completed tasks at the bottom regardless of sort criteria', () => {
+      const config: SortConfig = { criteria: 'alphabetical', direction: 'asc' };
+      const completionState = createTaskCompletionState();
+      
+      expect(completionState.isOk()).toBe(true);
+      if (completionState.isOk()) {
+        // Mark 'Alpha Task' as completed
+        const toggleResult = toggleTaskCompletion(completionState.value, '2');
+        
+        expect(toggleResult.isOk()).toBe(true);
+        if (toggleResult.isOk()) {
+          const result = sortTasksWithCompletion(mockTasks, config, toggleResult.value);
+          
+          expect(result.isOk()).toBe(true);
+          if (result.isOk()) {
+            const sorted = result.value;
+            // Should be: Beta Task, Zebra Task, Alpha Task (completed)
+            expect(sorted[0].content).toBe('Beta Task');
+            expect(sorted[1].content).toBe('Zebra Task');
+            expect(sorted[2].content).toBe('Alpha Task'); // completed, at bottom
+          }
+        }
+      }
+    });
+
+    it('should sort completed tasks among themselves according to sort criteria', () => {
+      const config: SortConfig = { criteria: 'alphabetical', direction: 'asc' };
+      const completionState = createTaskCompletionState();
+      
+      expect(completionState.isOk()).toBe(true);
+      if (completionState.isOk()) {
+        // Mark both 'Alpha Task' and 'Zebra Task' as completed
+        const firstToggle = toggleTaskCompletion(completionState.value, '2'); // Alpha Task
+        expect(firstToggle.isOk()).toBe(true);
+        
+        if (firstToggle.isOk()) {
+          const secondToggle = toggleTaskCompletion(firstToggle.value, '1'); // Zebra Task
+          expect(secondToggle.isOk()).toBe(true);
+          
+          if (secondToggle.isOk()) {
+            const result = sortTasksWithCompletion(mockTasks, config, secondToggle.value);
+            
+            expect(result.isOk()).toBe(true);
+            if (result.isOk()) {
+              const sorted = result.value;
+              // Should be: Beta Task, Alpha Task (completed), Zebra Task (completed)
+              expect(sorted[0].content).toBe('Beta Task');
+              expect(sorted[1].content).toBe('Alpha Task'); // completed, alphabetically first
+              expect(sorted[2].content).toBe('Zebra Task'); // completed, alphabetically second
+            }
+          }
+        }
+      }
+    });
+
+    it('should handle empty completion state', () => {
+      const config: SortConfig = { criteria: 'alphabetical', direction: 'asc' };
+      const completionState = createTaskCompletionState();
+      
+      expect(completionState.isOk()).toBe(true);
+      if (completionState.isOk()) {
+        const result = sortTasksWithCompletion(mockTasks, config, completionState.value);
+        
+        expect(result.isOk()).toBe(true);
+        if (result.isOk()) {
+          const sorted = result.value;
+          // Should be normal alphabetical sort
+          expect(sorted[0].content).toBe('Alpha Task');
+          expect(sorted[1].content).toBe('Beta Task');
+          expect(sorted[2].content).toBe('Zebra Task');
+        }
+      }
+    });
+
+    it('should return error for empty task list', () => {
+      const config: SortConfig = { criteria: 'priority', direction: 'asc' };
+      const completionState = createTaskCompletionState();
+      
+      expect(completionState.isOk()).toBe(true);
+      if (completionState.isOk()) {
+        const result = sortTasksWithCompletion([], config, completionState.value);
+        
+        expect(result.isErr()).toBe(true);
+        if (result.isErr()) {
+          expect(result.error.type).toBe('EMPTY_TASK_LIST');
+        }
+      }
     });
   });
 });

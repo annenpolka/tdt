@@ -1,5 +1,7 @@
 import { Result, ok, err } from 'neverthrow';
 import type { Task } from '@doist/todoist-api-typescript';
+import type { TaskCompletionState } from './taskCompletion';
+import { isTaskCompleted } from './taskCompletion';
 
 export type SortCriteria = 
   | 'priority'
@@ -118,6 +120,30 @@ export const sortTasks = (tasks: Task[], config: SortConfig): Result<Task[], Sor
       message: `ソート中にエラーが発生しました: ${error instanceof Error ? error.message : 'Unknown error'}` 
     });
   }
+};
+
+export const sortTasksWithCompletion = (
+  tasks: Task[],
+  config: SortConfig,
+  completionState: TaskCompletionState
+): Result<Task[], SortError> => {
+  if (tasks.length === 0) {
+    return err({ type: 'EMPTY_TASK_LIST', message: 'タスクリストが空です' });
+  }
+
+  const sortResult = sortTasks(tasks, config);
+  if (sortResult.isErr()) {
+    return sortResult;
+  }
+
+  const sortedTasks = sortResult.value;
+  
+  // Separate completed and incomplete tasks
+  const incompleteTasks = sortedTasks.filter(task => !isTaskCompleted(completionState, task.id));
+  const completedTasks = sortedTasks.filter(task => isTaskCompleted(completionState, task.id));
+  
+  // Combine: incomplete tasks first, then completed tasks
+  return ok([...incompleteTasks, ...completedTasks]);
 };
 
 export const getSortDisplayName = (criteria: SortCriteria, direction: SortDirection): string => {

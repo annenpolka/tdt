@@ -11,6 +11,7 @@ import { TaskPreview } from './components/TaskPreview';
 import { createTaskService } from './infra/taskService';
 import { getDebugConfig, shouldShowDebugInfo } from './infra/config';
 import { getMockDataset } from './infra/mockData/taskDatasets';
+import { createTaskCompletionManager, type TaskCompletionManager } from './app/taskCompletion';
 
 if (process.env.NODE_ENV === 'development') {
   dotenv.config();
@@ -22,6 +23,7 @@ export const App: React.FC = () => {
   const [error, setError] = React.useState<string | null>(null);
   const [selectedTask, setSelectedTask] = React.useState<Task | null>(null);
   const [highlightedTask, setHighlightedTask] = React.useState<Task | null>(null);
+  const [completionManager, setCompletionManager] = React.useState<TaskCompletionManager | null>(null);
 
   React.useEffect(() => {
     const fetchTasks = async () => {
@@ -49,6 +51,14 @@ export const App: React.FC = () => {
       }
     };
 
+    // Initialize completion manager
+    const managerResult = createTaskCompletionManager();
+    if (managerResult.isOk()) {
+      setCompletionManager(managerResult.value);
+    } else {
+      setError('タスク完了管理の初期化に失敗しました');
+    }
+
     fetchTasks();
   }, []);
 
@@ -62,6 +72,15 @@ export const App: React.FC = () => {
 
   const handleBackToList = () => {
     setSelectedTask(null);
+  };
+
+  const handleTaskCompletion = (taskId: string) => {
+    if (completionManager) {
+      const result = completionManager.toggleTaskCompletion(taskId);
+      if (result.isErr()) {
+        setError(result.error.message);
+      }
+    }
   };
 
   if (loading) {
@@ -92,10 +111,12 @@ export const App: React.FC = () => {
           tasks={tasks}
           onSelect={handleTaskSelect}
           onHighlight={handleTaskHighlight}
+          onToggleCompletion={handleTaskCompletion}
+          completionManager={completionManager}
         />
       </Box>
       <Box>
-        {highlightedTask && <TaskPreview task={highlightedTask} />}
+        {highlightedTask && <TaskPreview task={highlightedTask} completionManager={completionManager} />}
       </Box>
     </Box>
   );

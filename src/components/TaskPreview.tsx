@@ -1,12 +1,16 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 import type { Task } from '@doist/todoist-api-typescript';
+import type { TaskCompletionManager } from '../app/taskCompletion';
 
 interface TaskPreviewProps {
   task: Task;
+  completionManager?: TaskCompletionManager | null;
 }
 
-export const TaskPreview: React.FC<TaskPreviewProps> = ({ task }) => {
+export const TaskPreview: React.FC<TaskPreviewProps> = ({ task, completionManager }) => {
+  const isCompleted = completionManager?.isTaskCompleted(task.id) ?? false;
+  
   return (
     <Box flexDirection="column" padding={1} borderStyle="round" borderColor="cyan" width="100%">
       <Text color="cyan" bold>
@@ -15,7 +19,16 @@ export const TaskPreview: React.FC<TaskPreviewProps> = ({ task }) => {
       <Text />
       <Box flexDirection="row">
         <Text color="green" bold>タイトル: </Text>
-        <Text>{task.content}</Text>
+        <Text color={isCompleted ? 'gray' : 'white'} dimColor={isCompleted}>
+          {isCompleted ? '✓ ' : ''}{task.content}
+        </Text>
+      </Box>
+      
+      <Box flexDirection="row" marginTop={1}>
+        <Text color="green" bold>状態: </Text>
+        <Text color={isCompleted ? 'green' : 'white'}>
+          {isCompleted ? '完了' : '未完了'}
+        </Text>
       </Box>
       
       {task.description && (

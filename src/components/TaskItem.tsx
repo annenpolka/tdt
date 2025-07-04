@@ -2,10 +2,12 @@ import React from 'react';
 import { Text } from 'ink';
 import type { Task } from '@doist/todoist-api-typescript';
 import type { SortConfig } from '../core/sorting';
+import type { TaskCompletionManager } from '../app/taskCompletion';
 
 interface TaskItemProps {
   task: Task;
   sortConfig?: SortConfig;
+  completionManager?: TaskCompletionManager | null;
 }
 
 const getTaskDisplayInfo = (task: Task, sortConfig?: SortConfig): string => {
@@ -40,16 +42,19 @@ const getTaskDisplayInfo = (task: Task, sortConfig?: SortConfig): string => {
   }
 };
 
-export const TaskItem: React.FC<TaskItemProps> = ({ task, sortConfig }) => {
+export const TaskItem: React.FC<TaskItemProps> = ({ task, sortConfig, completionManager }) => {
   const displayText = getTaskDisplayInfo(task, sortConfig);
+  const isCompleted = completionManager?.isTaskCompleted(task.id) ?? false;
   
   return (
-    <Text>
-      {displayText}
+    <Text color={isCompleted ? 'gray' : 'white'} dimColor={isCompleted}>
+      {isCompleted ? '✓ ' : ''}{displayText}
     </Text>
   );
 };
 
-export const createTaskItemLabel = (task: Task, sortConfig?: SortConfig): string => {
-  return getTaskDisplayInfo(task, sortConfig);
+export const createTaskItemLabel = (task: Task, sortConfig?: SortConfig, completionManager?: TaskCompletionManager | null): string => {
+  const baseText = getTaskDisplayInfo(task, sortConfig);
+  const isCompleted = completionManager?.isTaskCompleted(task.id) ?? false;
+  return isCompleted ? `✓ ${baseText}` : baseText;
 };
