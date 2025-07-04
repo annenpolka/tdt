@@ -1,4 +1,4 @@
-import { getMockDataset, MockDatasetName } from './mockData/taskDatasets';
+import { MockDatasetName } from './mockData/taskDatasets';
 
 export interface DebugConfig {
   enabled: boolean;

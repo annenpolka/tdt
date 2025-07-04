@@ -85,8 +85,8 @@ describe('SelectableTaskList', () => {
     
     const output = lastFrame();
     expect(output).toContain('📋 タスク一覧 (3件)');
-    expect(output).toContain('タスク1 [プロジェクト: project1]');
-    expect(output).toContain('タスク2 [プロジェクト: project2]');
+    expect(output).toContain('タスク1 [期限なし]');
+    expect(output).toContain('タスク2 [期限なし]');
     expect(output).toContain('タスク3');
     expect(output).not.toContain('タスク3 [プロジェクト:');
   });

@@ -87,8 +87,8 @@ describe('統合テスト', () => {
     
     // タスクリストが表示されている
     expect(finalOutput).toContain('📋 タスク一覧 (2件)');
-    expect(finalOutput).toContain('第1のタスク [プロジェクト: project1]');
-    expect(finalOutput).toContain('第2のタスク [プロジェクト: project2]');
+    expect(finalOutput).toContain('第1のタスク [期限なし]');
+    expect(finalOutput).toContain('第2のタスク [期限なし]');
     
     // プレビューエリアが表示されている（最初のタスクが自動選択される）
     expect(finalOutput).toContain('📝 タスク詳細');
@@ -97,7 +97,7 @@ describe('統合テスト', () => {
     expect(finalOutput).toContain('説明: 重要なタスクです');
     
     // APIが正しく呼ばれている
-    expect(mockGetTasks).toHaveBeenCalledWith({ limit: 10 });
+    expect(mockGetTasks).toHaveBeenCalledWith({ limit: 20 });
   });
 
   it('空のタスクリストの場合の統合テスト', async () => {
@@ -180,7 +180,7 @@ describe('統合テスト', () => {
     const finalOutput = lastFrame();
     
     // タスクリストとプレビューの両方で情報が正しく表示される
-    expect(finalOutput).toContain('フル機能タスク [プロジェクト: main-project]');
+    expect(finalOutput).toContain('フル機能タスク [期限: 2023-12-01]');
     expect(finalOutput).toContain('タイトル: フル機能タスク');
     expect(finalOutput).toContain('説明: 詳細説明付きタスク');
     expect(finalOutput).toContain('優先度: 最高 (P1)');

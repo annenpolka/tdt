@@ -1,5 +1,5 @@
 import { Task, TodoistApi } from '@doist/todoist-api-typescript';
-import { Result, ok, err, ResultAsync, okAsync, errAsync } from 'neverthrow';
+import { ResultAsync, okAsync, errAsync } from 'neverthrow';
 
 export type TaskServiceError = 
   | { type: 'API_ERROR'; message: string }

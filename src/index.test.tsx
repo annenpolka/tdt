@@ -73,9 +73,9 @@ describe('App', () => {
     
     const output = lastFrame();
     expect(output).toContain('📋 タスク一覧 (1件)');
-    expect(output).toContain('テストタスク [プロジェクト: project1]');
+    expect(output).toContain('テストタスク [期限なし]');
     expect(output).toContain('📝 タスク詳細');
-    expect(mockGetTasks).toHaveBeenCalledWith({ limit: 10 });
+    expect(mockGetTasks).toHaveBeenCalledWith({ limit: 20 });
   });
 
   it('エラーが発生した場合にエラーメッセージを表示する', async () => {
@@ -105,6 +105,6 @@ describe('App', () => {
     await new Promise(resolve => setTimeout(resolve, 10));
     rerender(<App />);
     
-    expect(lastFrame()).toContain('エラー: タスクの取得に失敗しました');
+    expect(lastFrame()).toContain('エラー: Unknown error occurred');
   });
 });

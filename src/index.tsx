@@ -9,7 +9,7 @@ import { SelectableTaskList } from './components/SelectableTaskList';
 import { TaskDetail } from './components/TaskDetail';
 import { TaskPreview } from './components/TaskPreview';
 import { createTaskService } from './infra/taskService';
-import { getDebugConfig, isDebugMode, shouldShowDebugInfo } from './infra/config';
+import { getDebugConfig, shouldShowDebugInfo } from './infra/config';
 import { getMockDataset } from './infra/mockData/taskDatasets';
 
 if (process.env.NODE_ENV === 'development') {
