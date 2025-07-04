@@ -1,13 +1,16 @@
 /**
  * tdt - Todoist CLI tool
  */
-import { Task, TodoistApi } from '@doist/todoist-api-typescript';
+import { Task } from '@doist/todoist-api-typescript';
 import * as dotenv from 'dotenv';
 import { Box, render, Text } from 'ink';
 import React from 'react';
-import { SelectableTaskList } from './components/SelectableTaskList.js';
-import { TaskDetail } from './components/TaskDetail.js';
-import { TaskPreview } from './components/TaskPreview.js';
+import { SelectableTaskList } from './components/SelectableTaskList';
+import { TaskDetail } from './components/TaskDetail';
+import { TaskPreview } from './components/TaskPreview';
+import { createTaskService } from './infra/taskService';
+import { getDebugConfig, isDebugMode, shouldShowDebugInfo } from './infra/config';
+import { getMockDataset } from './infra/mockData/taskDatasets';
 
 if (process.env.NODE_ENV === 'development') {
   dotenv.config();
@@ -23,12 +26,21 @@ export const App: React.FC = () => {
   React.useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const api = new TodoistApi(process.env.TODOIST_API_KEY || 'testing');
-        const response = await api.getTasks({ limit: 100 });
-        setTasks(response.results || []);
-        // 初期状態で最初のタスクをハイライト
-        if (response.results && response.results.length > 0) {
-          setHighlightedTask(response.results[0]);
+        const debugConfig = getDebugConfig();
+        const mockTasks = debugConfig.enabled ? getMockDataset(debugConfig.dataset) : [];
+        const taskService = createTaskService(debugConfig.enabled, mockTasks);
+        
+        const result = await taskService.getTasks();
+        
+        if (result.isOk()) {
+          const taskList = result.value;
+          setTasks(taskList);
+          // 初期状態で最初のタスクをハイライト
+          if (taskList.length > 0) {
+            setHighlightedTask(taskList[0]);
+          }
+        } else {
+          setError(result.error.message);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'タスクの取得に失敗しました');
@@ -64,8 +76,17 @@ export const App: React.FC = () => {
     return <TaskDetail task={selectedTask} onBack={handleBackToList} />;
   }
 
+  const debugConfig = getDebugConfig();
+
   return (
     <Box flexDirection="column" width="100%">
+      {debugConfig.enabled && shouldShowDebugInfo() && (
+        <Box marginBottom={1} borderStyle="single" borderColor="yellow" padding={1}>
+          <Text color="yellow">
+            🐛 DEBUG MODE: dataset={debugConfig.dataset} | tasks={tasks.length}
+          </Text>
+        </Box>
+      )}
       <Box marginBottom={1}>
         <SelectableTaskList
           tasks={tasks}

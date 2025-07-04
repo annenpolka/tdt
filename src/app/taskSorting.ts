@@ -1,6 +1,6 @@
 import { Result, ok, err } from 'neverthrow';
 import type { Task } from '@doist/todoist-api-typescript';
-import { sortTasks, type SortConfig, type SortCriteria, type SortDirection, type SortError } from '../core/sorting.js';
+import { sortTasks, type SortConfig, type SortCriteria, type SortDirection, type SortError } from '../core/sorting';
 
 export interface TaskSortingState {
   currentConfig: SortConfig;

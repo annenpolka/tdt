@@ -8,7 +8,7 @@ import {
   getDirectionOptions,
   getNextSortCriteria,
   cycleSortCriteria
-} from './taskSorting.js';
+} from './taskSorting';
 import type { Task } from '@doist/todoist-api-typescript';
 
 describe('taskSorting', () => {

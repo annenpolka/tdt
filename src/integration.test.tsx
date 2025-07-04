@@ -43,6 +43,9 @@ describe('統合テスト', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.TODOIST_API_KEY = 'test-api-key';
+    // テスト環境でデバッグモードを無効化
+    process.env.DEBUG_MODE = 'false';
+    process.env.NODE_ENV = 'test';
   });
 
   it('アプリ全体のフローをテストする - タスクリストからプレビューまで', async () => {

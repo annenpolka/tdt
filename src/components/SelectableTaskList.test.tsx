@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'ink-testing-library';
-import { SelectableTaskList } from './SelectableTaskList.js';
+import { SelectableTaskList } from './SelectableTaskList';
 import type { Task } from '@doist/todoist-api-typescript';
 
 const createMockTask = (overrides: Partial<Task> = {}): Task => ({

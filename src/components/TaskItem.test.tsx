@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'ink-testing-library';
-import { TaskItem, createTaskItemLabel } from './TaskItem.js';
+import { TaskItem, createTaskItemLabel } from './TaskItem';
 import type { Task } from '@doist/todoist-api-typescript';
-import type { SortConfig } from '../core/sorting.js';
+import type { SortConfig } from '../core/sorting';
 
 const createMockTask = (overrides: Partial<Task> = {}): Task => ({
   id: '1',

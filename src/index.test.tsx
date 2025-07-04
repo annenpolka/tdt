@@ -14,6 +14,8 @@ describe('App', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.TODOIST_API_KEY = 'test-api-key';
+    // テスト環境でデバッグモードを無効化
+    process.env.DEBUG_MODE = 'false';
   });
 
   it('読み込み中の状態を表示する', () => {

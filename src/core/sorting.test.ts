@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { sortTasks, getSortDisplayName, type SortConfig } from './sorting.js';
+import { sortTasks, getSortDisplayName, type SortConfig } from './sorting';
 import type { Task } from '@doist/todoist-api-typescript';
 
 describe('sorting', () => {

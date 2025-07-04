@@ -1,7 +1,7 @@
 /**
  * Task domain model and business logic
  */
-import { TaskId, ProjectId, TaskContent } from "./shared.ts";
+import { TaskId, ProjectId, TaskContent } from "./shared";
 
 export type TaskPriority = 1 | 2 | 3 | 4;
 

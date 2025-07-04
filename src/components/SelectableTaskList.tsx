@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Box, Text, useInput } from 'ink';
 import SelectInput from 'ink-select-input';
 import type { Task } from '@doist/todoist-api-typescript';
-import { createTaskItemLabel } from './TaskItem.js';
+import { createTaskItemLabel } from './TaskItem';
 import { 
   applySorting, 
   createDefaultSortingState, 
   cycleSortCriteria,
   toggleSortDirection,
   type TaskSortingState
-} from '../app/taskSorting.js';
-import { getSortDisplayName } from '../core/sorting.js';
+} from '../app/taskSorting';
+import { getSortDisplayName } from '../core/sorting';
 
 interface SelectableTaskListProps {
   tasks: Task[];
